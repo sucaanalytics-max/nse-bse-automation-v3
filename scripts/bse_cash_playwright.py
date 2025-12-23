@@ -1,7 +1,9 @@
 from playwright.sync_api import sync_playwright
 import pandas as pd
-from scripts.utils import write_excel, today_str
+from datetime import date
+from scripts.excel_utils import append_to_sheet
 
+SHEET_NAME = "BSE_CASH"
 URL = "https://www.bseindia.com/markets/equity/EQReports/MarketWatch.aspx"
 
 def fetch_bse_cash():
@@ -22,10 +24,11 @@ def fetch_bse_cash():
 
         browser.close()
 
-        return pd.DataFrame(data)
+        df = pd.DataFrame(data)
+        df["date"] = date.today()
+        return df
 
 if __name__ == "__main__":
     df = fetch_bse_cash()
-    df["date"] = today_str()
-    write_excel("BSE_CASH", df)
-    print("✅ BSE Cash written")
+    append_to_sheet(SHEET_NAME, df)
+    print("✅ BSE Cash appended")
