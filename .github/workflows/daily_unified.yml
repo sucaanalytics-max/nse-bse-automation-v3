@@ -1,4 +1,4 @@
-name: NSE BSE Daily Automation v3
+name: NSE BSE Automation v3
 
 on:
   schedule:
@@ -16,25 +16,27 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install deps
         run: |
           pip install -r requirements.txt
           playwright install chromium
 
-      - name: NSE Daily
-        run: python scripts/nse_daily_playwright.py
+      - name: NSE Cash
+        run: python scripts/nse_cash.py
 
-      - name: BSE Cash Daily
-        run: python scripts/bse_cash_playwright.py
+      - name: NSE FO
+        run: python scripts/nse_fo.py
 
-      - name: BSE FO Daily
-        run: python scripts/bse_fo_playwright.py
+      - name: BSE Cash
+        run: python scripts/bse_cash.py
+
+      - name: BSE FO
+        run: python scripts/bse_fo.py
 
       - name: Commit Excel
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
           git add data/nse_bse_business_growth.xlsx
           git diff --cached --quiet || git commit -m "Daily NSE BSE update"
           git push
